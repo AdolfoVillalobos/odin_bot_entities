@@ -36,6 +36,9 @@ class Lote(BaseModel):
         if new_trade.trade_id not in self.trade_ids:
             self.trade_ids.append(new_trade.trade_id)
 
+    def is_full(self):
+        return (self.total_amount - self.filled) / self.total_amount >= 0.8
+
     def clear_lote(self):
         self.status = "active"
         self.filled = 0.0
