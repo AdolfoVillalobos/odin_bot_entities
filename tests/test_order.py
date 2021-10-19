@@ -52,31 +52,3 @@ class TestOrders(unittest.TestCase):
 
         self.assertEqual(self.fake_order.currency_balance, 3)
         self.assertEqual(self.fake_order.pair_currency_balance, 3000)
-
-    def test_compute_remaining_amount_sufficient_funds(self):
-        ticker_price = 50000  # 1 BTC = 50000 USDT
-
-        wallet = Wallet(
-            exchange="kraken",
-            coins={"USDT": Coin(name="USDT", amount=4 * 50000)},
-            sign=1.0,
-        )
-        remaining_amount = self.fake_order.calculate_remaining_position(
-            pair_currency_factor=ticker_price, other_exchange_wallet=wallet
-        )
-        self.assertEqual(remaining_amount, 3 * 50000)
-
-    def test_compute_remaining_amount_insufficient_funds(self):
-        ticker_price = 50000  # 1 BTC = 50000 USDT
-
-        wallet = Wallet(
-            exchange="kraken",
-            time=1287,
-            date=datetime.now(),
-            coins={"USDT": Coin(name="USDT", amount=1.5 * 50000)},
-            sign=1.0,
-        )
-        remaining_amount = self.fake_order.calculate_remaining_position(
-            pair_currency_factor=ticker_price, other_exchange_wallet=wallet
-        )
-        self.assertEqual(remaining_amount, 1.5 * 50000)
