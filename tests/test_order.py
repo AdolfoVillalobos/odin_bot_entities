@@ -20,6 +20,7 @@ class TestOrders(unittest.TestCase):
             time=186281653 + 10,
             type="buy",
             currency_value=1,
+            fee=0.1,
             pair_currency_value=1000,
         )
 
@@ -32,6 +33,7 @@ class TestOrders(unittest.TestCase):
             time=186281653 + 15,
             type="buy",
             currency_value=2,
+            fee=0.1,
             pair_currency_value=2000,
         )
 
