@@ -3,10 +3,9 @@ from datetime import datetime
 from typing import Dict, List
 from pydantic import BaseModel
 
-from currencies import (
+from .currencies import (
     CEROS,
     MINIMUM_TO_TRADE,
-    STABLE_COINS,
     COINS,
     RENAME_COINS_INV,
 )
