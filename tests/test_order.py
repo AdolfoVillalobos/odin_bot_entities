@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime
 
 
 from odin_bot_entities.balances import Wallet, Coin
@@ -70,6 +71,8 @@ class TestOrders(unittest.TestCase):
 
         wallet = Wallet(
             exchange="kraken",
+            time=1287,
+            date=datetime.now(),
             coins={"USDT": Coin(name="USDT", amount=1.5 * 50000)},
             sign=1.0,
         )
