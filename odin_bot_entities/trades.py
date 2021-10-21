@@ -29,6 +29,28 @@ class Transaction(BaseModel):
         return out
 
 
+class LedgerTransaction(BaseModel):
+    id: str
+    time: float
+    type: str
+    subtype: str
+    asset_class: str
+    amount: float
+    fee: float
+    exchange: str
+    resulting_balance: Optional[float]
+
+    def __str__(self):
+        out = "\n"
+        out += f"\t**{self.exchange.upper()} Ledger Transaction Id**: {self.id}"
+        out += f"\t\t**Ledger Type**: {self.type}"
+        out += f"\t\t**Amount**: {self.amount}"
+        out += f"\t\t**Fee**: {self.Fee}"
+        out += f"\t\t**Asset**: {self.asset_class}"
+        out += f"\t\t**Time**: {self.time}"
+        return out
+
+
 class Order(BaseModel):
     id: str
     amount: float
