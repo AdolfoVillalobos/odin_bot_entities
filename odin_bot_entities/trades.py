@@ -34,6 +34,7 @@ class LedgerTransaction(BaseModel):
     time: float
     type: str
     subtype: str
+    asset: str
     asset_class: str
     amount: float
     fee: float
@@ -46,7 +47,8 @@ class LedgerTransaction(BaseModel):
         out += f"\t\t**Ledger Type**: {self.type}"
         out += f"\t\t**Amount**: {self.amount}"
         out += f"\t\t**Fee**: {self.Fee}"
-        out += f"\t\t**Asset**: {self.asset_class}"
+        out += f"\t\t**Asset**: {self.asset}"
+        out += f"\t\t**Asset Class**: {self.asset_class}"
         out += f"\t\t**Time**: {self.time}"
         return out
 
