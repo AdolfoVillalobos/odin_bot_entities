@@ -39,25 +39,22 @@ class Lote(BaseModel):
     def is_full(self):
         return (self.total_amount - self.filled) / self.total_amount >= 0.8
 
-    def clear_lote(self):
-        self.status = "active"
-        self.filled = 0.0
-        self.remaining = 0.0
-        self.collected = 0.0
-        self.trade_ids = []
-        self.order_ids = []
-        self.transaction_ids = []
-
-    def close_lote(self, lasting_volume: float, lasting_amount: float):
-        self.status = "closed"
-
-        new_lote = self.copy()
-        new_lote.clear_lote()
-
-        new_lote.filled = lasting_volume
-        new_lote.collected = lasting_amount
-
-        return new_lote
+    @classmethod
+    def new_lote(cls, origin_market: str, origin_exchange: str, target_market: str, target_exchange: str, currency: str, total_amount: float, order_type: str):
+        return cls(
+            origin_exchange=origin_exchange,
+            origin_market=origin_market,
+            target_market=target_market,
+            target_exchange=target_exchange,
+            currency=currency,
+            total_amount=total_amount,
+            order_type=order_type,
+            filled=0.0,
+            remaining=total_amount,
+            collected=0.0,
+            order_ids=[],
+            trade_ids=[],
+            transaction_ids=[])
 
     def __str__(self):
         out = "\n"
