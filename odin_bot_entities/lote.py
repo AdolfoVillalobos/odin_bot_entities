@@ -1,5 +1,5 @@
-
-from datetime import datetime
+import time
+from datetime import date, datetime
 from typing import Union, List
 from pydantic import BaseModel
 
@@ -37,24 +37,28 @@ class Lote(BaseModel):
             self.trade_ids.append(new_trade.trade_id)
 
     def is_full(self):
-        return (self.total_amount - self.filled) / self.total_amount >= 0.8
+        return self.filled / self.total_amount >= 0.8
 
     @classmethod
-    def new_lote(cls, origin_market: str, origin_exchange: str, target_market: str, target_exchange: str, currency: str, total_amount: float, order_type: str):
+    def new_lote(cls, old_lote):
         return cls(
-            origin_exchange=origin_exchange,
-            origin_market=origin_market,
-            target_market=target_market,
-            target_exchange=target_exchange,
-            currency=currency,
-            total_amount=total_amount,
-            order_type=order_type,
+            status="active",
+            origin_exchange=old_lote.origin_exchange,
+            origin_market=old_lote.origin_market,
+            target_market=old_lote.target_market,
+            target_exchange=old_lote.target_exchange,
+            currency=old_lote.currency,
+            total_amount=old_lote.total_amount,
+            order_type=old_lote.order_type,
+            remaining=old_lote.total_amount,
             filled=0.0,
-            remaining=total_amount,
             collected=0.0,
             order_ids=[],
             trade_ids=[],
-            transaction_ids=[])
+            transaction_ids=[],
+            time=time.time(),
+            date=datetime.utcnow()
+        )
 
     def __str__(self):
         out = "\n"
