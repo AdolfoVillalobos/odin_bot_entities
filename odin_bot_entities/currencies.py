@@ -13,6 +13,7 @@ COINS = [
     "XLM",
     "EOS",
     "DOT",
+    "ADA"
 ]
 
 BALANCE_COINS = [*COINS, *STABLE_COINS, *CURRENCIES]
@@ -73,6 +74,7 @@ CEROS = {
     "USD": 2,
     "EUR": 2,
     "POL": 4,
+    "ADA": 6
 }
 
 
