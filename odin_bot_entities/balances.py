@@ -44,7 +44,7 @@ class Balance(BaseModel):
     def is_unbalanced(self, balance_coins: List[str], minimum_to_trade_dict: Dict[str, float], rename_coin_dict: Dict[str, float]) -> List[Coin]:
         try:
             non_stable_coins = {
-                coin_name: amount
+                coin_name: amount["Total"]
                 for coin_name, amount in self.balance.items()
                 if coin_name in balance_coins
             }
@@ -58,10 +58,8 @@ class Balance(BaseModel):
                     non_stable_coins.items(),
                 )
             )
-            out = ""
-            for name, amount in unbalanced.items():
-                out += f"\t\t **{name}**: __{amount}__"
-            return out
+
+            return unbalanced
 
         except Exception as err:
             raise err

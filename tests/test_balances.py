@@ -9,9 +9,8 @@ from odin_bot_entities.balances import Balance
 
 class TestWallets(unittest.TestCase):
 
-    def test_get_balance_from_wallets(self):
-
-        wallet1 = Wallet.parse_obj({
+    def setUp(self):
+        self.orionx_wallet = Wallet.parse_obj({
             "exchange": "orionX",
             "coins": {
                 "BTC": {"name": "BTC", "amount": 2.0},
@@ -22,7 +21,7 @@ class TestWallets(unittest.TestCase):
             "date": datetime.utcnow()
         })
 
-        wallet2 = Wallet.parse_obj({
+        self.kraken_wallet = Wallet.parse_obj({
             "exchange": "kraken",
             "coins": {
                 "BTC": {"name": "BTC", "amount": 1.0},
@@ -33,7 +32,7 @@ class TestWallets(unittest.TestCase):
             "date": datetime.utcnow()
         })
 
-        wallet3 = Wallet.parse_obj({
+        self.orionx_loans_wallet = Wallet.parse_obj({
             "exchange": "orionx_loans",
             "coins": {
                 "BTC": {"name": "BTC", "amount": 3.0},
@@ -44,17 +43,71 @@ class TestWallets(unittest.TestCase):
             "date": datetime.utcnow()
         })
 
-        balance_coins = ["BTC", "ETH", "SOL"]
-        wallets = [wallet1, wallet2, wallet3]
-        precision_dict = {
+        self.precision_dict = {
             "ETH": 8,
             "BTC": 8,
             "SOL": 8
         }
 
+        self.balance_coins = ["BTC", "ETH", "SOL"]
+        self.minimum_to_trade_dict = {
+            "BTC": 0.01,
+            "ETH": 0.03,
+            "SOL": 0.5
+        }
+
+    def test_get_balance_from_wallets(self):
+
+        wallets = [self.orionx_wallet,
+                   self.kraken_wallet, self.orionx_loans_wallet]
+
         balance = Balance.from_wallets(
-            balance_coins=balance_coins, wallets=wallets, precision_dict=precision_dict)
+            balance_coins=self.balance_coins,
+            wallets=wallets,
+            precision_dict=self.precision_dict
+        )
 
         self.assertEqual(balance.balance["BTC"]["Total"], 0.0)
         self.assertEqual(balance.balance["ETH"]["Total"], 0.0)
         self.assertEqual(balance.balance["SOL"]["Total"], 0.0)
+
+    def test_wallets_are_balanced(self):
+        wallets = [self.orionx_wallet,
+                   self.kraken_wallet, self.orionx_loans_wallet]
+
+        balance = Balance.from_wallets(
+            balance_coins=self.balance_coins, wallets=wallets, precision_dict=self.precision_dict)
+
+        unbalanced_coins = balance.is_unbalanced(
+            balance_coins=self.balance_coins,
+            minimum_to_trade_dict=self.minimum_to_trade_dict,
+            rename_coin_dict={"BTC": "BTC", "ETH": "ETH", "SOL": "SOL"})
+
+        self.assertEqual(unbalanced_coins, {})
+
+    def test_wallets_are_unbalanced(self):
+        wallets = [self.orionx_wallet, self.orionx_loans_wallet]
+
+        balance = Balance.from_wallets(
+            balance_coins=self.balance_coins, wallets=wallets, precision_dict=self.precision_dict)
+
+        unbalanced_coins = balance.is_unbalanced(
+            balance_coins=self.balance_coins,
+            minimum_to_trade_dict=self.minimum_to_trade_dict,
+            rename_coin_dict={"BTC": "BTC", "ETH": "ETH", "SOL": "SOL"})
+
+        self.assertEqual(unbalanced_coins, {"BTC": -1.0, "ETH": -4.0})
+
+    def test_wallets_are_unbalanced_but_cant_trade(self):
+        wallets = [self.orionx_wallet, self.orionx_loans_wallet]
+        self.minimum_to_trade_dict["BTC"] = 2.0
+
+        balance = Balance.from_wallets(
+            balance_coins=self.balance_coins, wallets=wallets, precision_dict=self.precision_dict)
+
+        unbalanced_coins = balance.is_unbalanced(
+            balance_coins=self.balance_coins,
+            minimum_to_trade_dict=self.minimum_to_trade_dict,
+            rename_coin_dict={"BTC": "BTC", "ETH": "ETH", "SOL": "SOL"})
+
+        self.assertEqual(unbalanced_coins, {"ETH": -4.0})
