@@ -2,7 +2,6 @@ import unittest
 from datetime import datetime
 
 
-from odin_bot_entities.balances import Wallet, Coin
 from odin_bot_entities.trades import Order, Transaction
 
 
