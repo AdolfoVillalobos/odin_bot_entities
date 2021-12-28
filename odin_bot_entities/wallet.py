@@ -21,6 +21,18 @@ class Wallet(BaseModel):
             self.coins[standard_name] = coin
             return self.sign * self.coins[standard_name]
 
+    def __eq__(self, other):
+        for coin in self.coins.values():
+            other_coin = other[coin.name]
+            if other_coin != coin:
+                return False
+
+        for other_coin in other.coins.values():
+            our_coin = self[other_coin.name]
+            if other_coin != our_coin:
+                return False
+        return True
+
     def __str__(self):
         out = ""
         for coin in self.coins.values():

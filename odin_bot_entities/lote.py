@@ -8,7 +8,7 @@ from .report import TradeReport
 
 
 class Lote(BaseModel):
-    status: str
+    active: bool
     origin_market: Union[str, None]
     origin_exchange: Union[str, None]
     target_market: str
@@ -42,7 +42,7 @@ class Lote(BaseModel):
     @classmethod
     def new_lote(cls, old_lote):
         return cls(
-            status="active",
+            active=True,
             origin_exchange=old_lote.origin_exchange,
             origin_market=old_lote.origin_market,
             target_market=old_lote.target_market,
@@ -66,5 +66,5 @@ class Lote(BaseModel):
         out += f"\t\t**Total Amount**: {self.total_amount}\n"
         out += f"\t\t**Filled**: {self.filled}\n"
         out += f"\t\t**Remaning**: {self.remaining}\n"
-        out += f"\t\t**Status**: {self.status}\n"
+        out += f"\t\t**Active**: {self.active}\n"
         return out

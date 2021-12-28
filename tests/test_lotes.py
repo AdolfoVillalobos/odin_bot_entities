@@ -9,7 +9,7 @@ class TestLotes(unittest.TestCase):
     def setUp(self) -> None:
 
         self.lote = Lote(
-            status="active",
+            active=True,
             currency="BTC",
             origin_market="BTC/USDT",
             target_market="BTC/CLP",

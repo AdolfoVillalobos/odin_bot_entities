@@ -23,6 +23,9 @@ class Coin(BaseModel):
     def __abs__(self):
         return Coin(name=self.name, amount=abs(self.amount))
 
+    def __eq__(self, other):
+        return self.name == other.name and self.amount == other.amount
+
     def __str__(self):
         out = ""
         out += f"\t\t **{self.name}**: {self.amount} ({self.precision})"

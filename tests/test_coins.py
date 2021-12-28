@@ -40,3 +40,14 @@ class TestCoins(unittest.TestCase):
 
         self.assertTrue("BTC" in coin_str)
         self.assertTrue("2.5" in coin_str)
+
+    def test_coin_comparison(self):
+
+        coin1 = Coin(name="BTC", amount=2.5)
+        coin2 = Coin(name="BTC", amount=2.5)
+        coin3 = Coin(name="BTC", amount=1.0)
+        coin4 = Coin(name="ETH", amount=2.5)
+
+        self.assertEqual(coin1, coin2)
+        self.assertNotEqual(coin1, coin3)
+        self.assertNotEqual(coin1, coin4)
